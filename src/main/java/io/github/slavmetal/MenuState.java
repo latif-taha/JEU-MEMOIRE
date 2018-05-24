@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Game's main menu.
+ */
 class MenuState extends JPanel implements GameState {
     private JButton gameButton = new JButton("Start New Game");
     private JButton scoresButton = new JButton("Show High Scores");
@@ -12,6 +15,11 @@ class MenuState extends JPanel implements GameState {
     public MenuState() {
     }
 
+    /**
+     * Updates the content of current panel.
+     * @param gsm       GameStateManager
+     * @param gamePanel Panel to update
+     */
     @Override
     public void update(GameStateManager gsm, JPanel gamePanel) {
         System.out.println("MENU STATE");
@@ -36,26 +44,5 @@ class MenuState extends JPanel implements GameState {
         gamePanel.add(tempPanel);
 
         gamePanel.updateUI();
-
-//        // Components of the dialog
-//        JDialog nickDialog = new JDialog();
-//        JPanel nickPanel = new JPanel();
-//        nickPanel.setLayout(new BoxLayout(nickPanel, BoxLayout.Y_AXIS));
-//        JTextField nickField = new JTextField();
-//        JButton button = new JButton("OK");
-//
-//        // Dialog itself
-//        JPanel tempPanel = new JPanel();
-//        tempPanel.add(new JLabel("Input your nickname:"));
-//        nickPanel.add(tempPanel);
-//
-//        tempPanel = new JPanel();
-//        nickField.setPreferredSize(new Dimension(250, 30));
-//        tempPanel.add(nickField);
-//        nickPanel.add(tempPanel);
-//
-//        tempPanel = new JPanel();
-//        tempPanel.add(button);
-//        nickPanel.add(tempPanel);
     }
 }

@@ -14,7 +14,7 @@ import java.text.ParseException;
 import java.util.*;
 
 /**
- * State when playing the game.
+ * Game board with dialogs for choosing size and nickname.
  */
 class PlayState extends JPanel implements GameState, ActionListener {
     private final int DEFAULTSIZE = 4;                  // Default size of square board (one of the sides)
@@ -48,6 +48,11 @@ class PlayState extends JPanel implements GameState, ActionListener {
         Collections.shuffle(imageFiles);
     }
 
+    /**
+     * Updates the content of current panel.
+     * @param gsm       GameStateManager
+     * @param gamePanel Panel to update
+     */
     @Override
     public void update(GameStateManager gsm, JPanel gamePanel) {
         System.out.println("PLAY STATE");

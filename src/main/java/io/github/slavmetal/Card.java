@@ -16,9 +16,9 @@ class Card extends JButton {
 
     /**
      * Default constructor
-     * @param file
-     * @param al
-     * @param name
+     * @param file  File to use as a button's icon
+     * @param al    Custom ActionListener for the button
+     * @param name  Name of the button
      */
     public Card(File file, ActionListener al, String name) {
         id = nextId.incrementAndGet();              // Set incremented ID
@@ -40,12 +40,11 @@ class Card extends JButton {
             state = CardButtonState.FRONT;
             this.setIcon(icon);
         } else if (state == CardButtonState.FRONT){
+            // Otherwise remove image in separate thread with CardWorker
+            // and set REAR state
             CardWorker cw = new CardWorker(this);
             cw.execute();
-
-            // Otherwise set REAR state and remove image
             state = CardButtonState.REAR;
-//            this.setIcon(null);
         }
     }
 

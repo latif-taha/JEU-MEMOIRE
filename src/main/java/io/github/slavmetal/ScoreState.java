@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.Properties;
 
 /**
- * Shows the highscores table.
+ * Game's highscores table.
  */
 class ScoreState extends JPanel implements GameState {
     private Properties prop = new Properties();
@@ -49,6 +49,11 @@ class ScoreState extends JPanel implements GameState {
         }
     }
 
+    /**
+     * Updates the content of current panel.
+     * @param gsm       GameStateManager
+     * @param gamePanel Panel to update
+     */
     @Override
     public void update(GameStateManager gsm, JPanel gamePanel) {
         /*System.out.println("SCORES");
@@ -78,25 +83,5 @@ class ScoreState extends JPanel implements GameState {
             try { DbUtils.close(statement); } catch (SQLException e1) { }
             try { DbUtils.close(connection); } catch (SQLException e1) { }
         }
-
-//        try {
-//
-//            //stmt.executeUpdate( "DROP TABLE table1" );
-//            stmt.executeUpdate( "CREATE TABLE IF NOT EXISTS SCORES (NICKNAME VARCHAR(20))" );
-////            CREATE TABLE IF NOT EXISTS TEST(ID INT PRIMARY KEY, NAME VARCHAR(255));
-//            stmt.executeUpdate( "INSERT INTO SCORES ( NICKNAME ) VALUES ( 'Claudio' )" );
-//            stmt.executeUpdate( "INSERT INTO SCORES ( NICKNAME ) VALUES ( 'Bernasconi' )" );
-//
-//            ResultSet rs = stmt.executeQuery("SELECT * FROM SCORES");
-//            while(rs.next()) {
-//                String name = rs.getString("NICKNAME");
-//                System.out.println( name );
-//            }
-//
-//            stmt.close();
-//            con.close();
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//        }
     }
 }
