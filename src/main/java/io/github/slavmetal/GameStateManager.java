@@ -18,7 +18,7 @@ class GameStateManager {
         currentState = MENUSTATE;
     }
 
-    public void setCurrentState(int i, JPanel gamePanel, Context context){
+    public void setCurrentState(int i, JPanel gamePanel){
         currentState = i;
         update(gamePanel);
     }

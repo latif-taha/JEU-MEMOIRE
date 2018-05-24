@@ -157,7 +157,7 @@ class PlayState extends JPanel implements GameState, ActionListener {
                     System.out.println("WIN");
                     timerLabel.stopTimer();
                     nickInput();
-                    gsm.setCurrentState(GameStateManager.SCORESTATE, panel, Context.GAME);
+                    gsm.setCurrentState(GameStateManager.SCORESTATE, panel);
                 }
             } else {
                 // If cards are not identical, turn back both of them

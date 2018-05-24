@@ -16,8 +16,8 @@ class MenuState extends JPanel implements GameState {
     public void update(GameStateManager gsm, JPanel gamePanel) {
         System.out.println("MENU STATE");
 
-        gameButton.addActionListener(actionEvent -> gsm.setCurrentState(GameStateManager.PLAYSTATE, gamePanel, Context.MENU));
-        scoresButton.addActionListener(actionEvent -> gsm.setCurrentState(GameStateManager.SCORESTATE, gamePanel, Context.MENU));
+        gameButton.addActionListener(actionEvent -> gsm.setCurrentState(GameStateManager.PLAYSTATE, gamePanel));
+        scoresButton.addActionListener(actionEvent -> gsm.setCurrentState(GameStateManager.SCORESTATE, gamePanel));
         exitButton.addActionListener(actionEvent -> System.exit(0));
 
         gamePanel.removeAll();
