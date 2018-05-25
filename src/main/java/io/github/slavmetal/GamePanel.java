@@ -4,17 +4,13 @@ import javax.swing.JPanel;
 
 import java.awt.*;
 
+/**
+ * Default panel that will be shown and changed by game states.
+ */
 class GamePanel extends JPanel {
-    private GameStateManager gsm;
-
     public GamePanel() {
-        this.setPreferredSize(new Dimension(400, 400));
-        gsm = new GameStateManager();
-        update();
+        this.setPreferredSize(new Dimension(500, 500));
+        // Initialize GameStateManager and update content of the panel
+        new GameStateManager().update(this);
     }
-
-    private void update() {
-        gsm.update(this);
-    }
-
 }

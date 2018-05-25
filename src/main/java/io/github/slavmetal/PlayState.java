@@ -103,45 +103,6 @@ class PlayState extends JPanel implements GameState, ActionListener {
     }
 
     /**
-     * Shows modal dialog to input size of the board.
-     */
-    private void sizeInput(){
-        // Components of the dialog
-        JDialog sizeDialog = new JDialog();
-        JPanel sizePanel = new JPanel();
-        JSpinner spinner = new JSpinner(new SpinnerNumberModel(/*DEFAULTSIZE*/2, 2, 20, 2));
-        JButton button = new JButton("OK");
-
-        // TODO Focus on OK button
-        // TODO Check if we have enough pictures
-
-        button.addActionListener(actionEvent -> {
-            try{
-                // Check if current value is OK
-                // If not, last correct value will be used
-                spinner.commitEdit();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            size = (Integer) spinner.getValue();    // Set new size of the board
-            sizeDialog.dispose();                   // Close the dialog
-        });
-
-        // Dialog itself
-        sizePanel.add(new JLabel("Select grid size:"));
-        sizePanel.add(spinner);
-        sizePanel.add(button);
-
-        // Some parameters
-        sizeDialog.setContentPane(sizePanel);
-        sizeDialog.setSize(new Dimension(500, 190));
-        sizeDialog.setLocationRelativeTo(null);
-        sizeDialog.setModal(true);
-        sizeDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        sizeDialog.setVisible(true);
-    }
-
-    /**
      * Processes clicks on the cards.
      * @param actionEvent   ActionEvent to get the pressed card
      */
@@ -182,6 +143,49 @@ class PlayState extends JPanel implements GameState, ActionListener {
         prevCard = pressedCard;
     }
 
+    /**
+     * Shows modal dialog to input size of the board.
+     */
+    private void sizeInput(){
+        // Components of the dialog
+        JDialog sizeDialog = new JDialog();
+        JPanel sizePanel = new JPanel();
+        JSpinner spinner = new JSpinner(new SpinnerNumberModel(DEFAULTSIZE, 2, 20, 2));
+        JButton button = new JButton("OK");
+
+        // TODO Focus on OK button
+        // TODO Check if we have enough pictures
+
+        button.addActionListener(actionEvent -> {
+            try{
+                // Check if current value is OK
+                // If not, last correct value will be used
+                spinner.commitEdit();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            size = (Integer) spinner.getValue();    // Set new size of the board
+            sizeDialog.dispose();                   // Close the dialog
+        });
+
+        // Dialog itself
+        sizePanel.add(new JLabel("Select grid size:"));
+        sizePanel.add(spinner);
+        sizePanel.add(button);
+
+        // Some parameters
+        sizeDialog.setContentPane(sizePanel);
+        sizeDialog.setSize(new Dimension(500, 190));
+        sizeDialog.setLocationRelativeTo(null);
+        sizeDialog.setModal(true);
+        sizeDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        sizeDialog.setVisible(true);
+    }
+
+    /**
+     * Shows modal dialog to input player's
+     * nickname and write his score to the DB.
+     */
     private void nickInput(){
         Properties prop = new Properties();
         InputStream input = null;
@@ -209,6 +213,7 @@ class PlayState extends JPanel implements GameState, ActionListener {
         JButton button = new JButton("OK");
 
         // TODO Focus on OK button
+        // TODO Move ActionListener to different class
 
         button.addActionListener(new ActionListener() {
             @Override
