@@ -4,6 +4,7 @@ import org.apache.commons.dbutils.DbUtils;
 import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,8 +37,7 @@ class ScoreState extends JPanel implements GameState {
             statement = connection.createStatement();
 
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS SCORES " +
-                    "(ID BIGINT IDENTITY PRIMARY KEY, " +
-                    "NICKNAME VARCHAR('"+prop.getProperty("maxnicklength")+"'), " +
+                    "(NICKNAME VARCHAR('"+prop.getProperty("maxnicklength")+"'), " +
                     "PLAYTIME TIME NOT NULL," +
                     "BOARDSIZE INT NOT NULL," +
                     "SCORE INT NOT NULL)"
@@ -57,13 +57,6 @@ class ScoreState extends JPanel implements GameState {
      */
     @Override
     public void update(GameStateManager gsm, JPanel gamePanel) {
-        /*System.out.println("SCORES");
-
-        gamePanel.removeAll();
-        gamePanel.add(new JButton("KURWA3"));
-        gamePanel.updateUI();*/
-
-
         try {
             Class.forName(prop.getProperty("dbdriver"));
             connection = DriverManager.getConnection(
@@ -72,11 +65,13 @@ class ScoreState extends JPanel implements GameState {
                     prop.getProperty("dbpassword"));
             statement = connection.createStatement();
 
-            ResultSet rs = statement.executeQuery("SELECT * FROM SCORES");
-            while (rs.next()) {
-                String name = rs.getString("NICKNAME");
-                System.out.println(name);
-            }
+            gamePanel.removeAll();
+            gamePanel.setLayout(new BorderLayout());
+            ScoresTableModel model = new ScoresTableModel();
+            model.refresh();
+            JTable table = new JTable(model);
+            gamePanel.add(new JScrollPane(table));
+            gamePanel.updateUI();
 
         } catch (ClassNotFoundException | SQLException e){
             e.printStackTrace();
