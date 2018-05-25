@@ -1,8 +1,8 @@
 package io.github.slavmetal;
 
+import org.pmw.tinylog.Logger;
+
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Game's main menu.
@@ -12,7 +12,7 @@ class MenuState extends JPanel implements GameState {
     private JButton scoresButton = new JButton("Show High Scores");
     private JButton exitButton = new JButton("Exit");
 
-    public MenuState() {
+    MenuState() {
     }
 
     /**
@@ -22,10 +22,11 @@ class MenuState extends JPanel implements GameState {
      */
     @Override
     public void update(GameStateManager gsm, JPanel gamePanel) {
-        System.out.println("MENU STATE");
-
+        // Switch from menu to the game board
         gameButton.addActionListener(actionEvent -> gsm.setCurrentState(GameStateManager.PLAYSTATE, gamePanel));
+        // Switch from menu to the highscores
         scoresButton.addActionListener(actionEvent -> gsm.setCurrentState(GameStateManager.SCORESTATE, gamePanel));
+        // Exit the app
         exitButton.addActionListener(actionEvent -> System.exit(0));
 
         gamePanel.removeAll();
@@ -44,5 +45,7 @@ class MenuState extends JPanel implements GameState {
         gamePanel.add(tempPanel);
 
         gamePanel.updateUI();
+
+        Logger.info("Menu State updated");
     }
 }

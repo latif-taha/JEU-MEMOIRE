@@ -1,6 +1,7 @@
 package io.github.slavmetal;
 
 import org.apache.commons.dbutils.DbUtils;
+import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
 import java.io.FileInputStream;
@@ -83,5 +84,7 @@ class ScoreState extends JPanel implements GameState {
             try { DbUtils.close(statement); } catch (SQLException e1) { }
             try { DbUtils.close(connection); } catch (SQLException e1) { }
         }
+
+        Logger.info("Score State updated");
     }
 }

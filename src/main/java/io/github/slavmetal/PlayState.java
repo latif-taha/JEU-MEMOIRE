@@ -1,5 +1,7 @@
 package io.github.slavmetal;
 
+import org.pmw.tinylog.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -33,8 +35,11 @@ class PlayState extends JPanel implements GameState, ActionListener {
      * Default empty constructor
      */
     public PlayState() {
-        // Get all jpg/jpeg/png files from 'img' directory
-        File dir = new File("./img");
+        // Load resources
+        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+        File dir = new File(Objects.requireNonNull(classLoader.getResource("board/img")).getFile());
+
+        // Get all jpg/jpeg/png files from 'img' directory to the list
         imageFiles = new ArrayList<>(Arrays.asList(Objects.requireNonNull(dir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File file, String s) {
@@ -43,6 +48,8 @@ class PlayState extends JPanel implements GameState, ActionListener {
                         s.toLowerCase().endsWith("png"));
             }
         }))));
+
+        Logger.info(imageFiles.size() + " images added to the list");
 
         // Shuffle so that each game we get different images on the board
         Collections.shuffle(imageFiles);
@@ -55,7 +62,6 @@ class PlayState extends JPanel implements GameState, ActionListener {
      */
     @Override
     public void update(GameStateManager gsm, JPanel gamePanel) {
-        System.out.println("PLAY STATE");
         this.gsm = gsm;
         this.panel = gamePanel;
 
@@ -92,6 +98,8 @@ class PlayState extends JPanel implements GameState, ActionListener {
         gamePanel.add(cardsPanel, BorderLayout.CENTER); // Show board at the center
         gamePanel.updateUI();                           // Update UI
         timerLabel.startTimer();                        // Start timer just after showing the new UI
+
+        Logger.info("Play State updated");
     }
 
     /**
@@ -135,7 +143,7 @@ class PlayState extends JPanel implements GameState, ActionListener {
 
     /**
      * Processes clicks on the cards.
-     * @param actionEvent
+     * @param actionEvent   ActionEvent to get the pressed card
      */
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
@@ -159,7 +167,7 @@ class PlayState extends JPanel implements GameState, ActionListener {
                     currPairsNum++;
                 } else {
                     // Otherwise stop timer and show scores state
-                    System.out.println("WIN");
+                    Logger.info("Game win");
                     timerLabel.stopTimer();
                     nickInput();
                     gsm.setCurrentState(GameStateManager.SCORESTATE, panel);
@@ -221,10 +229,11 @@ class PlayState extends JPanel implements GameState, ActionListener {
 
                     statement.close();
                     connection.close();
+
+                    Logger.info("Score added to the DB");
                 } catch (Exception e){
                     e.printStackTrace();
                 }
-                // TODO LOG USER HERE OR IN UPDATE METHOD
                 nickDialog.dispose();
             }
         });
