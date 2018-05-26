@@ -28,10 +28,11 @@ class FieldSizeDialog extends JDialog {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            size = (Integer) spinner.getValue();   // Set new size of the board
-            dispose();                          // Close the dialog
+            size = (Integer) spinner.getValue();    // Set new size of the board
+            dispose();                              // Close the dialog
         });
 
+        // Use temp panel to use elements' preferred size on the gamePanel
         JPanel tempPanel = new JPanel();
         tempPanel.add(new JLabel("Select grid size:"));
         tempPanel.add(spinner);

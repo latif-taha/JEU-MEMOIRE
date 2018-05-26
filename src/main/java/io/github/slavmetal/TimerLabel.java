@@ -38,10 +38,16 @@ class TimerLabel extends JLabel {
         timer.start();
     }
 
+    /**
+     * @return Current number of minutes
+     */
     int getCountMinutes() {
         return countMinutes;
     }
 
+    /**
+     * @return Current number of seconds
+     */
     int getCountSeconds() {
         return countSeconds;
     }

@@ -2,6 +2,9 @@ package io.github.slavmetal;
 
 import java.sql.Time;
 
+/**
+ * Structure for every row in the scores table.
+ */
 class ScoresList {
     private String nickname;
     private Time time;

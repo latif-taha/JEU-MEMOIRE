@@ -27,6 +27,9 @@ class PlayState extends JPanel implements GameState, ActionListener {
     private JPanel panel;                               // Panel to pass when setting new game's state in Action Listener
     private TimerLabel timerLabel = new TimerLabel();   // Timer label to show current game time
 
+    /**
+     * Prepares all images we can use on the board.
+     */
     PlayState() {
         // TODO Check if enough pictures
         // Load resources

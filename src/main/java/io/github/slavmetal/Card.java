@@ -15,7 +15,7 @@ class Card extends JButton {
     private CardButtonState state;                              // Current card's state (e.g. current side of card)
 
     /**
-     * Default constructor
+     * Default constructor.
      * @param file  File to use as a button's icon
      * @param al    Custom ActionListener for the button
      * @param name  Name of the button

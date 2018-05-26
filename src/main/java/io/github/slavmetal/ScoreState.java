@@ -68,7 +68,7 @@ class ScoreState extends JPanel implements GameState {
             gamePanel.removeAll();
             gamePanel.setLayout(new BorderLayout());
             ScoresTableModel model = new ScoresTableModel();
-            model.refresh();
+            model.updateData();
             JTable table = new JTable(model);
             gamePanel.add(new JScrollPane(table));
             gamePanel.updateUI();
