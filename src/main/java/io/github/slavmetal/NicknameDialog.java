@@ -1,5 +1,6 @@
 package io.github.slavmetal;
 
+import org.apache.commons.dbutils.DbUtils;
 import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
@@ -11,10 +12,9 @@ import java.awt.event.KeyEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.Time;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -23,11 +23,13 @@ import java.util.Properties;
  */
 class NicknameDialog extends JDialog {
     NicknameDialog(Time playTime, int boardSize, int score) {
+        DbConnection dbConnection = new DbConnection();
+        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         Properties prop = new Properties();
         InputStream input;
 
         try {
-            input = new FileInputStream("config.properties");
+            input = new FileInputStream(Objects.requireNonNull(classLoader.getResource("config.properties")).getFile());
             prop.load(input);
         } catch (IOException e){
             e.printStackTrace();
@@ -52,12 +54,7 @@ class NicknameDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try {
-                    Class.forName(prop.getProperty("dbdriver"));
-                    Connection connection = DriverManager.getConnection(
-                            prop.getProperty("dbconnection"),
-                            prop.getProperty("dbuser"),
-                            prop.getProperty("dbpassword"));
-                    Statement statement = connection.createStatement();
+                    Statement statement = dbConnection.getConnection().createStatement();
 
                     statement.executeUpdate("INSERT INTO SCORES (NICKNAME, PLAYTIME, BOARDSIZE, SCORE) VALUES (" +
                             "'"+nickField.getText().replaceAll("'", "").trim()+"', " +
@@ -66,8 +63,8 @@ class NicknameDialog extends JDialog {
                             "'"+((score < 0) ? 0 : score)+"')"
                     );
 
-                    statement.close();
-                    connection.close();
+                    DbUtils.close(statement);
+                    DbUtils.close(dbConnection.getConnection());
 
                     Logger.info("Score added to the DB");
                 } catch (Exception e){

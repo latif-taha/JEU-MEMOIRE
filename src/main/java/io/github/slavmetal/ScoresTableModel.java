@@ -3,13 +3,9 @@ package io.github.slavmetal;
 import org.apache.commons.dbutils.DbUtils;
 
 import javax.swing.table.AbstractTableModel;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Model to use in the JTable to show all scores.
@@ -73,23 +69,12 @@ public class ScoresTableModel extends AbstractTableModel {
      * Updates the data stored in the database table.
      */
     void updateData() {
-        Properties prop = new Properties();
-        InputStream input;
-        Connection connection = null;
+        DbConnection dbConnection = new DbConnection();
         PreparedStatement preparedStatement = null;
         List<String> values = new ArrayList<>();
 
         try {
-            input = new FileInputStream("config.properties");
-            prop.load(input);
-
-            Class.forName(prop.getProperty("dbdriver"));
-            connection = DriverManager.getConnection(
-                    prop.getProperty("dbconnection"),
-                    prop.getProperty("dbuser"),
-                    prop.getProperty("dbpassword"));
-
-            preparedStatement = connection.prepareStatement("SELECT * FROM SCORES");
+            preparedStatement = dbConnection.getConnection().prepareStatement("SELECT * FROM SCORES");
             ResultSet resultSet = preparedStatement.executeQuery();
             ResultSetMetaData rsmd = resultSet.getMetaData();
 
@@ -103,7 +88,7 @@ public class ScoresTableModel extends AbstractTableModel {
                 scoresList.add(list);
             }
 
-        } catch (IOException | ClassNotFoundException | SQLException e){
+        } catch (SQLException e){
             e.printStackTrace();
         } finally {
             if (columnNames.size() != values.size()) {
@@ -114,7 +99,7 @@ public class ScoresTableModel extends AbstractTableModel {
             }
 
             try { DbUtils.close(preparedStatement); } catch (SQLException e1) { }
-            try { DbUtils.close(connection); } catch (SQLException e1) { }
+            try { DbUtils.close(dbConnection.getConnection()); } catch (SQLException e1) { }
         }
     }
 

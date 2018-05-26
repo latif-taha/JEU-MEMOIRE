@@ -9,15 +9,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
  * Game's highscores table.
  */
 class ScoreState implements GameState {
-    private Connection connection;
     private Statement statement;
-    JButton backButt = new JButton("Return to main menu");
+    private JButton backButt = new JButton("Return to main menu");
 
     /**
      * Creates a table if it doesn't exist.
@@ -63,17 +63,15 @@ class ScoreState implements GameState {
      * Creates table in the database if it doesn't exist yet.
      */
     private void createDatabaseTable(){
+        DbConnection dbConnection = new DbConnection();
+
         try {
-            InputStream input = new FileInputStream("config.properties");
+            ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+            InputStream input = new FileInputStream(Objects.requireNonNull(classLoader.getResource("config.properties")).getFile());
             Properties prop = new Properties();
             prop.load(input);
 
-            Class.forName(prop.getProperty("dbdriver"));
-            connection = DriverManager.getConnection(
-                    prop.getProperty("dbconnection"),
-                    prop.getProperty("dbuser"),
-                    prop.getProperty("dbpassword"));
-            statement = connection.createStatement();
+            statement = dbConnection.getConnection().createStatement();
 
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS SCORES " +
                     "(NICKNAME VARCHAR('"+ prop.getProperty("maxnicklength")+"'), " +
@@ -81,11 +79,11 @@ class ScoreState implements GameState {
                     "BOARDSIZE INT NOT NULL," +
                     "SCORE INT NOT NULL)"
             );
-        } catch (IOException | ClassNotFoundException | SQLException e){
+        } catch (IOException | SQLException e){
             e.printStackTrace();
         } finally {
             try { DbUtils.close(statement); } catch (SQLException e1) { }
-            try { DbUtils.close(connection); } catch (SQLException e1) { }
+            try { DbUtils.close(dbConnection.getConnection()); } catch (SQLException e1) { }
         }
     }
 }
