@@ -14,7 +14,7 @@ class GameStateManager {
     /**
      * Initializes all game's states and sets a default one.
      */
-    public GameStateManager() {
+    GameStateManager() {
         gameStates.add(new MenuState());
         gameStates.add(new PlayState());
         gameStates.add(new ScoreState());
@@ -26,7 +26,7 @@ class GameStateManager {
      * @param i         Number of the state
      * @param gamePanel Panel to change
      */
-    public void setCurrentState(byte i, JPanel gamePanel){
+    void setCurrentState(byte i, JPanel gamePanel){
         currentState = i;
         update(gamePanel);
     }
@@ -35,7 +35,7 @@ class GameStateManager {
      * Updates a panel (depending on the current state).
      * @param gamePanel Panel to change
      */
-    public void update(JPanel gamePanel){
+    void update(JPanel gamePanel){
         gameStates.get(currentState).update(this, gamePanel);
     }
 }

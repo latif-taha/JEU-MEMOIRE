@@ -49,9 +49,9 @@ public class ScoresTableModel extends AbstractTableModel {
         return value;
     }
 
-    public void refresh() throws SQLException {
+    void refresh() throws SQLException {
         Properties prop = new Properties();
-        InputStream input = null;
+        InputStream input;
         Connection con = null;
 
         try {

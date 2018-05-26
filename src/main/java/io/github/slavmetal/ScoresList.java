@@ -8,26 +8,26 @@ class ScoresList {
     private int boardSize;
     private int score;
 
-    public ScoresList(String nickname, Time time, int boardSize, int score) {
+    ScoresList(String nickname, Time time, int boardSize, int score) {
         this.nickname = nickname;
         this.time = time;
         this.boardSize = boardSize;
         this.score = score;
     }
 
-    public String getNickname() {
+    String getNickname() {
         return nickname;
     }
 
-    public Time getTime() {
+    Time getTime() {
         return time;
     }
 
-    public int getBoardSize() {
+    int getBoardSize() {
         return boardSize;
     }
 
-    public int getScore() {
+    int getScore() {
         return score;
     }
 

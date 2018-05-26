@@ -20,7 +20,7 @@ class Card extends JButton {
      * @param al    Custom ActionListener for the button
      * @param name  Name of the button
      */
-    public Card(File file, ActionListener al, String name) {
+    Card(File file, ActionListener al, String name) {
         id = nextId.incrementAndGet();              // Set incremented ID
         state = CardButtonState.REAR;               // Default state is REAR
         icon = new ImageIcon(String.valueOf(file));
@@ -34,7 +34,7 @@ class Card extends JButton {
     /**
      * Flips the card depending on it's state.
      */
-    public void turn(){
+    void turn(){
         if(state == CardButtonState.REAR){
             // If state is REAR, set FRONT state and show the image
             state = CardButtonState.FRONT;
@@ -51,7 +51,7 @@ class Card extends JButton {
     /**
      * Makes interaction with button impossible.
      */
-    public void deactivate() {
+    void deactivate() {
         this.state = CardButtonState.NOTACTIVE;
         this.setEnabled(false);
     }
@@ -59,7 +59,7 @@ class Card extends JButton {
     /**
      * @return Card's unique ID
      */
-    public int getId() {
+    int getId() {
         return id;
     }
 }

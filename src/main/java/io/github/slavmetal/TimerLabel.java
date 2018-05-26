@@ -15,7 +15,7 @@ class TimerLabel extends JLabel {
     /**
      * Contains Swing Timer initialization.
      */
-    public TimerLabel() {
+    TimerLabel() {
         // Every second increase value of seconds (or minutes) and update label's value.
         timer = new Timer(1000, new ActionListener() {
             public void actionPerformed(ActionEvent actionEvent) {
@@ -30,11 +30,19 @@ class TimerLabel extends JLabel {
         });
     }
 
-    public void stopTimer(){
+    void stopTimer(){
         timer.stop();
     }
 
-    public void startTimer(){
+    void startTimer(){
         timer.start();
+    }
+
+    int getCountMinutes() {
+        return countMinutes;
+    }
+
+    int getCountSeconds() {
+        return countSeconds;
     }
 }

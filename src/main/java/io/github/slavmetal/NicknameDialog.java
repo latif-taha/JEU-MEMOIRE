@@ -99,9 +99,4 @@ class NicknameDialog extends JDialog {
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setVisible(true);
     }
-    // TODO remove it
-//
-//    private int timeToSeconds(LocalTime time){
-//        return time.toSecondOfDay();
-//    }
 }
