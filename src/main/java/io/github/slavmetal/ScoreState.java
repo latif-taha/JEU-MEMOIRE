@@ -5,6 +5,8 @@ import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +26,7 @@ class ScoreState extends JPanel implements GameState {
     /**
      * Creates a table if it doesn't exist.
      */
-    public ScoreState() {
+    ScoreState() {
         try {
             input = new FileInputStream("config.properties");
             prop.load(input);
@@ -57,28 +59,33 @@ class ScoreState extends JPanel implements GameState {
      */
     @Override
     public void update(GameStateManager gsm, JPanel gamePanel) {
-        try {
-            Class.forName(prop.getProperty("dbdriver"));
-            connection = DriverManager.getConnection(
-                    prop.getProperty("dbconnection"),
-                    prop.getProperty("dbuser"),
-                    prop.getProperty("dbpassword"));
-            statement = connection.createStatement();
+        // Create model, get data from the database and add it to the JTable
+        ScoresTableModel model = new ScoresTableModel();
+        JTable table = new JTable(model);
+        model.updateData();
 
-            gamePanel.removeAll();
-            gamePanel.setLayout(new BorderLayout());
-            ScoresTableModel model = new ScoresTableModel();
-            model.updateData();
-            JTable table = new JTable(model);
-            gamePanel.add(new JScrollPane(table));
-            gamePanel.updateUI();
+        JPanel scoresPanel = new JPanel(new BorderLayout());
+        scoresPanel.add(new JScrollPane(table));
 
-        } catch (ClassNotFoundException | SQLException e){
-            e.printStackTrace();
-        } finally {
-            try { DbUtils.close(statement); } catch (SQLException e1) { }
-            try { DbUtils.close(connection); } catch (SQLException e1) { }
-        }
+        // Create menu bar and add back button to it
+        JPanel menuPanel = new JPanel();
+        JMenuBar menuBar = new JMenuBar();
+        JButton backButt = new JButton("Return to main menu");
+        backButt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                gsm.setCurrentState(GameStateManager.MENUSTATE, gamePanel);
+            }
+        });
+
+        menuBar.add(backButt);
+        menuPanel.add(menuBar);
+
+        gamePanel.removeAll();
+        gamePanel.setLayout(new BorderLayout());
+        gamePanel.add(scoresPanel, BorderLayout.CENTER);
+        gamePanel.add(menuPanel, BorderLayout.SOUTH);
+        gamePanel.updateUI();
 
         Logger.info("Score State updated");
     }
