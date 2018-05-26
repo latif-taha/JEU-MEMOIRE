@@ -14,38 +14,21 @@ import java.util.*;
  * Game board with dialogs for choosing size and nickname.
  */
 class PlayState extends JPanel implements GameState, ActionListener {
-    private final int DEFAULTSIZE = 4;                 // Default size of square board (one of the sides)
-    private int size = DEFAULTSIZE;                    // Set size of the board
+    private final int DEFAULTSIZE = 4;                  // Default size of square board (one of the sides)
+    private int size = DEFAULTSIZE;                     // Set size of the board
     private ArrayList<File> imageFiles;                 // Store all found images for cards
-    private ArrayList<Card> cards = new ArrayList<>();  // Store all cards for the board
-    private byte currClick = 1;                         // Number of current click on card
+    private ArrayList<Card> cards;                      // Store all cards for the board
+    private byte currClick;                             // Number of current click on card
     private Card prevCard;                              // Store previous card to compare it with latest pressed one
-    private byte currPairsNum = 0;                      // Number of guessed pairs
-    private int score = 0;
+    private byte currPairsNum;                          // Number of guessed pairs
+    private int score;                                  // Total score
 
     private GameStateManager gsm;                       // GameStateManager to set new game's state in Action Listener
     private JPanel panel;                               // Panel to pass when setting new game's state in Action Listener
     private TimerLabel timerLabel = new TimerLabel();   // Timer label to show current game time
 
-    /**
-     * Prepares all images we can use on the board.
-     */
     PlayState() {
-        // TODO Check if enough pictures
-        // Load resources
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        File dir = new File(Objects.requireNonNull(classLoader.getResource("board/img")).getFile());
-
-        // Get all jpg/jpeg/png files from 'img' directory to the list
-        imageFiles = new ArrayList<>(Arrays.asList(Objects.requireNonNull(dir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File file, String s) {
-                return (s.toLowerCase().endsWith("jpg") ||
-                        s.toLowerCase().endsWith("jpeg") ||
-                        s.toLowerCase().endsWith("png"));
-            }
-        }))));
-
+        loadImages();
         Logger.info(imageFiles.size() + " images added to the list");
 
         // Shuffle so that each game we get different images on the board
@@ -59,8 +42,10 @@ class PlayState extends JPanel implements GameState, ActionListener {
      */
     @Override
     public void update(GameStateManager gsm, JPanel gamePanel) {
+        // Objects that will be used in ActionListener
         this.gsm = gsm;
         this.panel = gamePanel;
+        resetValues();
 
         // Modal dialog to choose size of the board
         FieldSizeDialog fsd = new FieldSizeDialog(DEFAULTSIZE);
@@ -76,7 +61,7 @@ class PlayState extends JPanel implements GameState, ActionListener {
         menuBar.add(timerLabel);                                    // Add timer to it
 
         menuPanel.add(menuBar);
-        menuPanel.setPreferredSize(new Dimension(400, 30));
+        menuPanel.setPreferredSize(new Dimension(500, 30));
 
         // Every time add 2 same cards to the array
         for (int i = 0; i < (size * size) / 2; i++) {
@@ -98,6 +83,36 @@ class PlayState extends JPanel implements GameState, ActionListener {
         timerLabel.startTimer();                        // Start timer just after showing the new UI
 
         Logger.info("Play State updated");
+    }
+
+    /**
+     *  Resets game values before every game.
+     */
+    private void resetValues(){
+        // This code is even too ugly
+        cards = new ArrayList<>();
+        currClick = 1;
+        currPairsNum = 0;
+        score = 0;
+    }
+
+    /**
+     * Loads all images we can use for cards.
+     */
+    private void loadImages(){
+        // Load resources
+        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+        File dir = new File(Objects.requireNonNull(classLoader.getResource("board/img")).getFile());
+
+        // Get all jpg/jpeg/png files from 'img' directory to the list
+        imageFiles = new ArrayList<>(Arrays.asList(Objects.requireNonNull(dir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File file, String s) {
+                return (s.toLowerCase().endsWith("jpg") ||
+                        s.toLowerCase().endsWith("jpeg") ||
+                        s.toLowerCase().endsWith("png"));
+            }
+        }))));
     }
 
     /**
