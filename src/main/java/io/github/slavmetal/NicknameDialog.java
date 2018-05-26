@@ -77,6 +77,9 @@ class NicknameDialog extends JDialog {
             }
         });
 
+        // Create 'padding' from the top
+        nickPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+
         // Use temp panel to use elements' preferred size on the BoxLayout
         JPanel tempPanel = new JPanel();
         tempPanel.add(new JLabel("Input your nickname:"));

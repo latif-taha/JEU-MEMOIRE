@@ -18,21 +18,36 @@ public class ScoresTableModel extends AbstractTableModel {
     private List<ScoresList> scoresList = new ArrayList<>(25);
     private List<String> columnNames = new ArrayList<>(25);
 
+    /**
+     * @return Number of rows in the table
+     */
     @Override
     public int getRowCount() {
         return scoresList.size();
     }
 
+    /**
+     * @return Number of columns in the table
+     */
     @Override
     public int getColumnCount() {
         return columnNames.size();
     }
 
+    /**
+     * @param column Column to get name of
+     * @return Name of the column
+     */
     @Override
     public String getColumnName(int column) {
         return columnNames.get(column);
     }
 
+    /**
+     * @param rowIndex      Index of the row
+     * @param columnIndex   Index of the column
+     * @return              Value of a cell at given row/column index
+     */
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         ScoresList rowValue = scoresList.get(rowIndex);

@@ -12,6 +12,7 @@ class FieldSizeDialog extends JDialog {
 
     FieldSizeDialog(int defaultSize) {
         size = defaultSize;
+
         // Components of the dialog
         JSpinner spinner = new JSpinner(new SpinnerNumberModel(defaultSize, 2, 20, 2));
         JButton button = new JButton("OK");
@@ -31,6 +32,9 @@ class FieldSizeDialog extends JDialog {
             size = (Integer) spinner.getValue();    // Set new size of the board
             dispose();                              // Close the dialog
         });
+
+        // Create 'padding' from the top
+        sizePanel.add(Box.createRigidArea(new Dimension(0, 30)));
 
         // Use temp panel to use elements' preferred size on the gamePanel
         JPanel tempPanel = new JPanel();

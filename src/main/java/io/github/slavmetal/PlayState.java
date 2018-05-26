@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * Game board with dialogs for choosing size and nickname.
  */
-class PlayState extends JPanel implements GameState, ActionListener {
+class PlayState implements GameState, ActionListener {
     private final int DEFAULTSIZE = 4;                  // Default size of square board (one of the sides)
     private int size = DEFAULTSIZE;                     // Set size of the board
     private ArrayList<File> imageFiles;                 // Store all found images for cards
@@ -25,7 +25,7 @@ class PlayState extends JPanel implements GameState, ActionListener {
 
     private GameStateManager gsm;                       // GameStateManager to set new game's state in Action Listener
     private JPanel panel;                               // Panel to pass when setting new game's state in Action Listener
-    private TimerLabel timerLabel = new TimerLabel();   // Timer label to show current game time
+    private TimerLabel timerLabel;                      // Timer label to show current game time
 
     PlayState() {
         loadImages();
@@ -66,7 +66,7 @@ class PlayState extends JPanel implements GameState, ActionListener {
         }
 
         // Shuffle cards in the array
-//        Collections.shuffle(cards);
+        Collections.shuffle(cards);
 
         // And finally add all cards to the board
         for (int i = 0; i < size * size; i++) {
@@ -86,6 +86,7 @@ class PlayState extends JPanel implements GameState, ActionListener {
      */
     private void resetValues(){
         // This code is even too ugly
+        timerLabel = new TimerLabel();
         cards = new ArrayList<>();
         currClick = 1;
         currPairsNum = 0;
@@ -109,6 +110,8 @@ class PlayState extends JPanel implements GameState, ActionListener {
                         s.toLowerCase().endsWith("png"));
             }
         }))));
+
+        Collections.shuffle(imageFiles);
     }
 
     /**

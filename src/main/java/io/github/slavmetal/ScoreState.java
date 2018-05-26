@@ -5,8 +5,6 @@ import org.pmw.tinylog.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +14,7 @@ import java.util.Properties;
 /**
  * Game's highscores table.
  */
-class ScoreState extends JPanel implements GameState {
+class ScoreState implements GameState {
     private Connection connection;
     private Statement statement;
     JButton backButt = new JButton("Return to main menu");
