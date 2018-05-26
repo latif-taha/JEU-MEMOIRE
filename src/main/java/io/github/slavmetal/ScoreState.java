@@ -17,39 +17,17 @@ import java.util.Properties;
  * Game's highscores table.
  */
 class ScoreState extends JPanel implements GameState {
-    private Properties prop = new Properties();
-    private InputStream input = null;
-
     private Connection connection;
     private Statement statement;
+    JButton backButt = new JButton("Return to main menu");
 
     /**
      * Creates a table if it doesn't exist.
      */
-    ScoreState() {
-        try {
-            input = new FileInputStream("config.properties");
-            prop.load(input);
+    ScoreState(GameStateManager gsm, JPanel gamePanel) {
+        backButt.addActionListener(actionEvent -> gsm.setCurrentState(GameStateManager.MENUSTATE, gamePanel));
 
-            Class.forName(prop.getProperty("dbdriver"));
-            connection = DriverManager.getConnection(
-                    prop.getProperty("dbconnection"),
-                    prop.getProperty("dbuser"),
-                    prop.getProperty("dbpassword"));
-            statement = connection.createStatement();
-
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS SCORES " +
-                    "(NICKNAME VARCHAR('"+prop.getProperty("maxnicklength")+"'), " +
-                    "PLAYTIME TIME NOT NULL," +
-                    "BOARDSIZE INT NOT NULL," +
-                    "SCORE INT NOT NULL)"
-            );
-        } catch (IOException | ClassNotFoundException | SQLException e){
-            e.printStackTrace();
-        } finally {
-            try { DbUtils.close(statement); } catch (SQLException e1) { }
-            try { DbUtils.close(connection); } catch (SQLException e1) { }
-        }
+        createDatabaseTable();
     }
 
     /**
@@ -70,13 +48,6 @@ class ScoreState extends JPanel implements GameState {
         // Create menu bar and add back button to it
         JPanel menuPanel = new JPanel();
         JMenuBar menuBar = new JMenuBar();
-        JButton backButt = new JButton("Return to main menu");
-        backButt.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                gsm.setCurrentState(GameStateManager.MENUSTATE, gamePanel);
-            }
-        });
 
         menuBar.add(backButt);
         menuPanel.add(menuBar);
@@ -88,5 +59,35 @@ class ScoreState extends JPanel implements GameState {
         gamePanel.updateUI();
 
         Logger.info("Score State updated");
+    }
+
+    /**
+     * Creates table in the database if it doesn't exist yet.
+     */
+    private void createDatabaseTable(){
+        try {
+            InputStream input = new FileInputStream("config.properties");
+            Properties prop = new Properties();
+            prop.load(input);
+
+            Class.forName(prop.getProperty("dbdriver"));
+            connection = DriverManager.getConnection(
+                    prop.getProperty("dbconnection"),
+                    prop.getProperty("dbuser"),
+                    prop.getProperty("dbpassword"));
+            statement = connection.createStatement();
+
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS SCORES " +
+                    "(NICKNAME VARCHAR('"+ prop.getProperty("maxnicklength")+"'), " +
+                    "PLAYTIME TIME NOT NULL," +
+                    "BOARDSIZE INT NOT NULL," +
+                    "SCORE INT NOT NULL)"
+            );
+        } catch (IOException | ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+        } finally {
+            try { DbUtils.close(statement); } catch (SQLException e1) { }
+            try { DbUtils.close(connection); } catch (SQLException e1) { }
+        }
     }
 }

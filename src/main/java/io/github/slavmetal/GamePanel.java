@@ -11,6 +11,6 @@ class GamePanel extends JPanel {
     GamePanel() {
         this.setPreferredSize(new Dimension(500, 500));
         // Initialize GameStateManager and update content of the panel
-        new GameStateManager().update(this);
+        new GameStateManager(this).update(this);
     }
 }

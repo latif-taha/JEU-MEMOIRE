@@ -13,6 +13,15 @@ class MenuState extends JPanel implements GameState {
     private JButton scoresButton = new JButton("Show High Scores");
     private JButton exitButton = new JButton("Exit");
 
+    MenuState(GameStateManager gsm, JPanel gamePanel) {
+        // Switch from menu to the game board
+        gameButton.addActionListener(actionEvent -> gsm.setCurrentState(GameStateManager.PLAYSTATE, gamePanel));
+        // Switch from menu to the highscores
+        scoresButton.addActionListener(actionEvent -> gsm.setCurrentState(GameStateManager.SCORESTATE, gamePanel));
+        // Exit the app
+        exitButton.addActionListener(actionEvent -> System.exit(0));
+    }
+
     /**
      * Updates the content of current panel.
      * @param gsm       GameStateManager
@@ -20,13 +29,6 @@ class MenuState extends JPanel implements GameState {
      */
     @Override
     public void update(GameStateManager gsm, JPanel gamePanel) {
-        // Switch from menu to the game board
-        gameButton.addActionListener(actionEvent -> gsm.setCurrentState(GameStateManager.PLAYSTATE, gamePanel));
-        // Switch from menu to the highscores
-        scoresButton.addActionListener(actionEvent -> gsm.setCurrentState(GameStateManager.SCORESTATE, gamePanel));
-        // Exit the app
-        exitButton.addActionListener(actionEvent -> System.exit(0));
-
         // Set buttons' preferred size
         Dimension buttDimension = new Dimension(300, 50);
         gameButton.setPreferredSize(buttDimension);

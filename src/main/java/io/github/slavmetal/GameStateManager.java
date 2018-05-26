@@ -7,17 +7,17 @@ class GameStateManager {
     private ArrayList<GameState> gameStates = new ArrayList<>();
     private byte currentState;
 
-    public static final byte MENUSTATE = 0;
-    public static final byte PLAYSTATE = 1;
-    public static final byte SCORESTATE = 2;
+    static final byte MENUSTATE = 0;
+    static final byte PLAYSTATE = 1;
+    static final byte SCORESTATE = 2;
 
     /**
      * Initializes all game's states and sets a default one.
      */
-    GameStateManager() {
-        gameStates.add(new MenuState());
+    GameStateManager(JPanel gamePanel) {
+        gameStates.add(new MenuState(this, gamePanel));
         gameStates.add(new PlayState());
-        gameStates.add(new ScoreState());
+        gameStates.add(new ScoreState(this, gamePanel));
         currentState = MENUSTATE;
     }
 

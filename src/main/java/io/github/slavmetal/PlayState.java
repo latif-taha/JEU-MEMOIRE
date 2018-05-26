@@ -29,10 +29,6 @@ class PlayState extends JPanel implements GameState, ActionListener {
 
     PlayState() {
         loadImages();
-        Logger.info(imageFiles.size() + " images added to the list");
-
-        // Shuffle so that each game we get different images on the board
-        Collections.shuffle(imageFiles);
     }
 
     /**
