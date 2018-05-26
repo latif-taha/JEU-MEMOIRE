@@ -6,35 +6,29 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
-import java.text.ParseException;
+import java.sql.Time;
 import java.util.*;
 
 /**
  * Game board with dialogs for choosing size and nickname.
  */
 class PlayState extends JPanel implements GameState, ActionListener {
-    private final int DEFAULTSIZE = 4;                  // Default size of square board (one of the sides)
-    private int size = DEFAULTSIZE;                     // Set size of the board
+    private final int DEFAULTSIZE = 4;                 // Default size of square board (one of the sides)
+    private int size = DEFAULTSIZE;                    // Set size of the board
     private ArrayList<File> imageFiles;                 // Store all found images for cards
     private ArrayList<Card> cards = new ArrayList<>();  // Store all cards for the board
     private byte currClick = 1;                         // Number of current click on card
     private Card prevCard;                              // Store previous card to compare it with latest pressed one
     private byte currPairsNum = 0;                      // Number of guessed pairs
+    private int score = 0;
 
     private GameStateManager gsm;                       // GameStateManager to set new game's state in Action Listener
     private JPanel panel;                               // Panel to pass when setting new game's state in Action Listener
     private TimerLabel timerLabel = new TimerLabel();   // Timer label to show current game time
 
-    /**
-     * Default empty constructor
-     */
-    public PlayState() {
+    PlayState() {
+        // TODO Check if enough pictures
         // Load resources
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         File dir = new File(Objects.requireNonNull(classLoader.getResource("board/img")).getFile());
@@ -66,7 +60,8 @@ class PlayState extends JPanel implements GameState, ActionListener {
         this.panel = gamePanel;
 
         // Modal dialog to choose size of the board
-        sizeInput();
+        FieldSizeDialog fsd = new FieldSizeDialog(DEFAULTSIZE);
+        size = fsd.getChosenSize();
 
         gamePanel.removeAll();
         gamePanel.setLayout(new BorderLayout());
@@ -123,6 +118,8 @@ class PlayState extends JPanel implements GameState, ActionListener {
                 prevCard.deactivate();
                 pressedCard.deactivate();
 
+                score += size * size;
+
                 // And if it's not the last guessed pair, increment our value
                 if(currPairsNum != ((size * size) / 2) - 1) {
                     currPairsNum++;
@@ -130,139 +127,19 @@ class PlayState extends JPanel implements GameState, ActionListener {
                     // Otherwise stop timer and show scores state
                     Logger.info("Game win");
                     timerLabel.stopTimer();
-                    nickInput();
+                    new NicknameDialog(new Time(0, timerLabel.getCountMinutes(), timerLabel.getCountSeconds()),
+                            size, score); // Input nick and write it to the DB
                     gsm.setCurrentState(GameStateManager.SCORESTATE, panel);
                 }
             } else {
                 // If cards are not identical, turn back both of them
                 prevCard.turn();
                 pressedCard.turn();
+
+                score -= size;
             }
         }
 
         prevCard = pressedCard;
-    }
-
-    /**
-     * Shows modal dialog to input size of the board.
-     */
-    private void sizeInput(){
-        // Components of the dialog
-        JDialog sizeDialog = new JDialog();
-        JPanel sizePanel = new JPanel();
-        JSpinner spinner = new JSpinner(new SpinnerNumberModel(DEFAULTSIZE, 2, 20, 2));
-        JButton button = new JButton("OK");
-
-        // TODO Focus on OK button
-        // TODO Check if we have enough pictures
-
-        button.addActionListener(actionEvent -> {
-            try{
-                // Check if current value is OK
-                // If not, last correct value will be used
-                spinner.commitEdit();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            size = (Integer) spinner.getValue();    // Set new size of the board
-            sizeDialog.dispose();                   // Close the dialog
-        });
-
-        // Dialog itself
-        sizePanel.add(new JLabel("Select grid size:"));
-        sizePanel.add(spinner);
-        sizePanel.add(button);
-
-        // Some parameters
-        sizeDialog.setContentPane(sizePanel);
-        sizeDialog.setSize(new Dimension(500, 190));
-        sizeDialog.setLocationRelativeTo(null);
-        sizeDialog.setModal(true);
-        sizeDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        sizeDialog.setVisible(true);
-    }
-
-    /**
-     * Shows modal dialog to input player's
-     * nickname and write his score to the DB.
-     */
-    private void nickInput(){
-        Properties prop = new Properties();
-        InputStream input = null;
-
-        try {
-            input = new FileInputStream("config.properties");
-            prop.load(input);
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-
-        // Components of the dialog
-        JDialog nickDialog = new JDialog();
-        JPanel nickPanel = new JPanel();
-        nickPanel.setLayout(new BoxLayout(nickPanel, BoxLayout.Y_AXIS));
-        JTextField nickField = new JTextField();
-        nickField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent keyEvent) {
-                if (nickField.getText().length() >= Integer.parseInt(prop.getProperty("maxnicklength")))
-                    // Just say we got this request but do nothing
-                    keyEvent.consume();
-            }
-        });
-        JButton button = new JButton("OK");
-
-        // TODO Focus on OK button
-        // TODO Move ActionListener to different class
-
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                try {
-                    Class.forName(prop.getProperty("dbdriver"));
-                    Connection connection = DriverManager.getConnection(
-                            prop.getProperty("dbconnection"),
-                            prop.getProperty("dbuser"),
-                            prop.getProperty("dbpassword"));
-                    Statement statement = connection.createStatement();
-
-                    statement.executeUpdate("INSERT INTO SCORES (NICKNAME, PLAYTIME, BOARDSIZE, SCORE) VALUES ('"
-                            +nickField.getText().replaceAll("'", "").trim()+"', " +
-                            "'12:00:00'," +
-                            " '4'," +
-                            " '5000')");
-
-                    statement.close();
-                    connection.close();
-
-                    Logger.info("Score added to the DB");
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-                nickDialog.dispose();
-            }
-        });
-
-        // Dialog itself
-        JPanel tempPanel = new JPanel();
-        tempPanel.add(new JLabel("Input your nickname:"));
-        nickPanel.add(tempPanel);
-
-        tempPanel = new JPanel();
-        nickField.setPreferredSize(new Dimension(250, 30));
-        tempPanel.add(nickField);
-        nickPanel.add(tempPanel);
-
-        tempPanel = new JPanel();
-        tempPanel.add(button);
-        nickPanel.add(tempPanel);
-
-        // Some parameters
-        nickDialog.setContentPane(nickPanel);
-        nickDialog.setSize(new Dimension(300, 190));
-        nickDialog.setLocationRelativeTo(null);
-        nickDialog.setModal(true);
-        nickDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        nickDialog.setVisible(true);
     }
 }
