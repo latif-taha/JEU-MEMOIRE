@@ -62,4 +62,11 @@ class Card extends JButton {
     int getId() {
         return id;
     }
+
+    /**
+     * @return Card's current state
+     */
+    CardButtonState getState() {
+        return state;
+    }
 }

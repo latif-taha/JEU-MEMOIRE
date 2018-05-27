@@ -15,57 +15,6 @@ public class ScoresTableModel extends AbstractTableModel {
     private List<String> columnNames = new ArrayList<>(25);
 
     /**
-     * @return Number of rows in the table
-     */
-    @Override
-    public int getRowCount() {
-        return scoresList.size();
-    }
-
-    /**
-     * @return Number of columns in the table
-     */
-    @Override
-    public int getColumnCount() {
-        return columnNames.size();
-    }
-
-    /**
-     * @param column Column to get name of
-     * @return Name of the column
-     */
-    @Override
-    public String getColumnName(int column) {
-        return columnNames.get(column);
-    }
-
-    /**
-     * @param rowIndex      Index of the row
-     * @param columnIndex   Index of the column
-     * @return              Value of a cell at given row/column index
-     */
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        ScoresList rowValue = scoresList.get(rowIndex);
-        Object value = null;
-        switch (columnIndex){
-            case 0:
-                value = rowValue.getNickname();
-                break;
-            case 1:
-                value = rowValue.getTime();
-                break;
-            case 2:
-                value = rowValue.getBoardSize();
-                break;
-            case 3:
-                value = rowValue.getScore();
-                break;
-        }
-        return value;
-    }
-
-    /**
      * Updates the data stored in the database table.
      */
     void updateData() {
@@ -101,6 +50,57 @@ public class ScoresTableModel extends AbstractTableModel {
             try { DbUtils.close(preparedStatement); } catch (SQLException e1) { }
             try { DbUtils.close(dbConnection.getConnection()); } catch (SQLException e1) { }
         }
+    }
+
+    /**
+     * @param rowIndex      Index of the row
+     * @param columnIndex   Index of the column
+     * @return              Value of a cell at given row/column index
+     */
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        ScoresList rowValue = scoresList.get(rowIndex);
+        Object value = null;
+        switch (columnIndex){
+            case 0:
+                value = rowValue.getNickname();
+                break;
+            case 1:
+                value = rowValue.getTime();
+                break;
+            case 2:
+                value = rowValue.getBoardSize();
+                break;
+            case 3:
+                value = rowValue.getScore();
+                break;
+        }
+        return value;
+    }
+
+    /**
+     * @return Number of rows in the table
+     */
+    @Override
+    public int getRowCount() {
+        return scoresList.size();
+    }
+
+    /**
+     * @return Number of columns in the table
+     */
+    @Override
+    public int getColumnCount() {
+        return columnNames.size();
+    }
+
+    /**
+     * @param column Column to get name of
+     * @return Name of the column
+     */
+    @Override
+    public String getColumnName(int column) {
+        return columnNames.get(column);
     }
 
 }

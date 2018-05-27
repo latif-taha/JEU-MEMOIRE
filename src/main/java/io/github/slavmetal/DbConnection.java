@@ -34,6 +34,9 @@ class DbConnection {
         }
     }
 
+    /**
+     * @return Active Connection to the database
+     */
     Connection getConnection() {
         return connection;
     }

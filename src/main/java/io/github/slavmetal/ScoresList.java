@@ -18,18 +18,30 @@ class ScoresList {
         this.score = score;
     }
 
+    /**
+     * @return Player's nickname
+     */
     String getNickname() {
         return nickname;
     }
 
+    /**
+     * @return Player's time
+     */
     Time getTime() {
         return time;
     }
 
+    /**
+     * @return Player's board size
+     */
     int getBoardSize() {
         return boardSize;
     }
 
+    /**
+     * @return Player's score
+     */
     int getScore() {
         return score;
     }

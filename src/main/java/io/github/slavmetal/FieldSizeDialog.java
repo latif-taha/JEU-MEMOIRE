@@ -55,6 +55,9 @@ class FieldSizeDialog extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * @return Size of field chosen by the user
+     */
     int getChosenSize() {
         return size;
     }

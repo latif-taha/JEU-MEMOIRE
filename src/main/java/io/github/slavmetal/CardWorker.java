@@ -15,7 +15,8 @@ class CardWorker extends SwingWorker {
     @Override
     protected Object doInBackground() throws Exception {
         Thread.sleep(2000);  // 2s delay
-        button.setIcon(null);   // Remove icon
+        if(button.getState() != CardButtonState.NOTACTIVE)
+            button.setIcon(null);   // Remove icon
         return null;
     }
 }
